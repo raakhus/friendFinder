@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,144 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  
-      <script src="https://code.jquery.com/jquery.js"></script>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
 
 </head>
+
 <body>
-    
+    <div class="container">
+
+        <div class="jumbotron">
+            <h1 class="text-center"></span>Welcome to the Survey!!!</h1>
+            <hr>
+            <p class="text-center"> Click the Home Button to go back Home || Click Submit to Find a match</p>
+            <br>
+
+            <div class="text-center">
+                <a href="/"><button class="btn btn-lg btn-primary"><span class="fa fa-list-alt"></span>Home</button></a>
+            </div>
+        </div>
+        <h3>All catagories are rated 1 to 5. 1 being strongly disagree, 5 being strongly agree.</h3>
+        <div class="form-group">
+            <label for="formGroupExampleInput">name</label>
+            <input type="text" class="form-control" id="name" placeholder="name">
+        </div>
+        <div class='row'>
+
+            <ol id="question-box">
+                <!-- <li>
+                    Example of the code from the for loop when its not in one line
+                    <div class="form-check form-check-inline">
+                        <div class="form-check">
+                            <p>how big is my dog?</p>
+                            1 <input class="form-check-input " type="radio" name="exampleRadios" id="exampleRadios1" value="1">
+                            <label class="form-check-label" for="exampleRadios1">
+                            </label>
+                            2 <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="2">
+                            <label class="form-check-label" for="exampleRadios1">
+                            </label>
+                            3 <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="3">
+                            <label class="form-check-label" for="exampleRadios1">
+                                
+                            </label>
+                            4 <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="4">
+                            <label class="form-check-label" for="exampleRadios1">
+                          
+                            </label>
+                            5 <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios5" value="5">
+                            <label class="form-check-label" for="exampleRadios1">
+                           
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <br> -->
+            </ol>
+
+        </div>
+        <div class="text-center">
+            <button class="btn btn-lg btn-primary" id='submit'><span></span>Submit</button></a>
+        </div>
+    </div>
+
 </body>
+
 </html>
+
+<script>
+
+    var questions = ["You like tall People", "You like Food", "You like Water", "You like Dogs", "You liKe cats", "You like Exoitic Amimals", "You like making you like Statments", "You Like the Same Sex", "You like Meat", "You like Outdoor Activites"]
+    function questionBuilder() {
+        for (var i = 0; i < questions.length; i++) {
+            $('#question-box').append('<li> <div class="form-check form-check-inline"><div class="form-check"> <p>' + questions[i] + '</p> 1 <input class="form-check-input" type="radio" name="radio'+i+ ' id="radio'+i+ '" value="1"> <label class="form-check-label" for="radio'+i+ '"> </label> 2 <input class="form-check-input" type="radio" name="radio'+i+ ' id="radio'+i+ '" value="2"> <label class="form-check-label" for="radio'+i+ '"> </label> 3 <input class="form-check-input" type="radio" name="radio'+i+ 'id="radio'+i+ '" value="3"> <label class="form-check-label" for="radio'+i+ '"> </label> 4 <input class="form-check-input" type="radio" name="radio'+i+ ' id="radio'+i+ '" value="4> <label class="form-check-label" for="radio'+i+ '"> </label> 5 <input class="form-check-input" type="radio" name="radio'+i+ ' id="radio'+i+ '" value="5"> <label class="form-check-label" for="radio'+i+ '"> </label></div></div></li><br>')
+        }
+    }
+    console.log($('#radio1'))
+    questionBuilder();
+
+    $('#submit').on("click", function (event) {
+        event.preventDefault();
+        var scores = [];
+        
+        function check() {
+            if ($('#name').val().trim() === ""){
+                console.log('name is empty')
+                alert('fix your inputs')
+                console.log('name is empty')
+            return location.reload();
+            }
+            for (var i = 0; i < questions.length; i++) {
+                if  ($('#radio'+i).val())
+                    console.log('cool')
+                else {
+                    console.log('input is empty')
+                    alert("Fix your inputs")
+                    return location.reload();
+                }
+                function putScores() {
+                    for (var i = 0; i < questions.length; i++) {
+                        var temp = $('#radio' + i).val()
+                        scores.push(temp)
+                    }
+                }
+            }
+        }
+        check();
+        putScores();
+        var newFriend = {
+            name: $('#name').val().trim(),
+            photo: "none",
+            scores: scores
+        };
+
+        $.post("/api/friends", newFriend,
+            function (data) {
+            });
+        function uncheck() {
+            alert("Survey Recieved!")
+            $('#name').val('')
+            for (var i = 0; i < questions.length; i++) {
+                $("#radio" + i).prop("checked", false);
+            }
+        }
+        // uncheck(); $('#myForm input').on('change', function() {
+//    alert($('input[name=radioName]:checked', '#myForm').val()); 
+// });
+        // function scoreCheck()
+    });
+    // NEED SLEEP TO HANDLE THIS ALSO FIND OUT WHY FRIENDS ARE BEING ADDED TO HOME PAGE ON SUBMIT
+    // function runFriendsQueryCompare() {
+    //     $.ajax({ url: "/api/friends", method: "GET" }).then(function (friendData) {
+    //         console.log(friendData);
+    //         console.log("------------------------------------");
+    //         var scoresArr = friendData[i].scores;
+    //         var scoresAvg = []
+    //         for (var i = 0; i < friendData.length; i++) {
+    //             scoresArr.reduce(function(total, currentvalue, currentIndex, arr), initialValue);
+    //             }
+
+    //     });
+    // };
+    // runFriendsQueryCompare();
+</script>
