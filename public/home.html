@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="jumbotron">
+            <h1 class="text-center"></span>Welcome to Friend Finder!!!</h1>
+            <hr>
+            <p class="text-center"> Click the Survey button to take the survey and see which Friends have the most
+                potential for you!</p>
+            <br>
+
+            <div class="text-center">
+                <a href="/survey"><button class="btn btn-lg btn-primary"><span class="fa fa-list-alt"></span> Survey</button></a>
+            </div>
+        </div>
+
+        <h1 class="text-center"></span> Take a Peek at Potential Friends!</h1>
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Friends List</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul id="friendlist" class="list-group"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer mt-4">
+            <div class="container">
+                <p>Control Panel</p>
+                <p><a href="#" id="clear">Clear Friends</a>
+            </div>
+        </footer>
+    </div>
+</body>
+<script type="text/javascript">
+
+    function runFriendsQuery() {
+        $.ajax({ url: "/api/friends", method: "GET" })
+            .then(function (friendData) {
+
+                console.log(friendData);
+                console.log("------------------------------------");
+
+                for (var i = 0; i < friendData.length; i++) {
+
+                    var friendlist = $("#friendlist");
+
+                    var listItem = $("<li class='list-group-item mt-4'>");
+
+                    listItem.append(
+                        $("<h2>").text("friend" + (i + 1)),
+                        $("<h2>").text("Name: " + friendData[i].name),
+                        // $("<h2>").text("ID: " + friendData[i].customerID)   !!!!!! make photo !!!!!!!
+
+                    );
+
+                    friendlist.append(listItem);
+                }
+            });
+    }
+    // trying to keep it a little orgainzed to see what happens
+    function clearFriends() {
+        alert("Clearing...");
+        $.ajax({ url: "/api/clear", method: "POST" }).then(function () {
+            $("#friendlist").empty();
+        });
+    }
+
+    $("#clear").on("click", clearFriends);
+
+    runFriendsQuery();
+
+</script>
+
+</html>
